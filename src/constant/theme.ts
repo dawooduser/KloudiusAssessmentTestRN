@@ -49,7 +49,18 @@ export const SIZES = Object.freeze({
   height,
   iconSize: 25,
 });
-
+export const FONTS = {
+  largeTitle: {  fontSize: SIZES.largeTitle },
+  h1: {  fontSize: SIZES.h1 },
+  h2: {  fontSize: SIZES.h2 },
+  h3: { fontSize: SIZES.h3 },
+  h4: {  fontSize: SIZES.h4 },
+  body1: {  fontSize: SIZES.body1 },
+  body2: {  fontSize: SIZES.body2 },
+  body3: {  fontSize: SIZES.body3 },
+  body4: {  fontSize: SIZES.body4 },
+  body5: {  fontSize: SIZES.body5 },
+};
 
 export const commonStyles = StyleSheet.create({
   fillFullScreen: {flex: 1},
@@ -105,6 +116,6 @@ export const commonStyles = StyleSheet.create({
   },
 });
 
-const appTheme = {COLORS, SIZES,};
+const appTheme = {COLORS, SIZES, FONTS};
 
 export default appTheme;

@@ -1,13 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { FLUSH, PAUSE, PERSIST, persistReducer, persistStore, PURGE, REGISTER, REHYDRATE, } from 'redux-persist';
 import rootReducer from '../combineReducers';
-import reduxMMKVStorage from '../storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 
 const persistConfig = {
     key: 'root',
     version: 1,
-    storage: reduxMMKVStorage,
+    storage: AsyncStorage,
     blacklist: ['spinner'],
 };
 
@@ -24,12 +25,14 @@ const store = configureStore({
         immutableCheck: false,
     }),
 });
-export type RootState = ReturnType<typeof store.getState>;
+export type AppStore = typeof store;
+export type RootState = ReturnType<AppStore['getState']>;
 // Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
 export type AppDispatch = typeof store.dispatch;
 
 
 export const persistor = persistStore(store);
+
 export default store;
 
 

@@ -6,13 +6,18 @@ import { PersistGate } from 'redux-persist/integration/react'
 import { COLORS } from './src/constant';
 import Toast from 'react-native-toast-message';
 import RootStack from './src/navigation/RootStack';
+import AxiosContext from './src/customHooks/hooks/useAxiosInterceptor';
+import LazyLoader from './src/components/view/LazyLoader';
 
 const App: FC = () => {
   return (
     <Provider store={store}>
     <PersistGate loading={<ActivityIndicator size={"large"} color={COLORS.primary} />} persistor={persistor}>
+    <AxiosContext>
       <RootStack />
       <Toast />
+      <LazyLoader />
+    </AxiosContext>
     </PersistGate>
   </Provider>
   )
