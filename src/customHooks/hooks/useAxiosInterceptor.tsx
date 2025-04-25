@@ -95,7 +95,7 @@ const AxiosContext = ({ children }: AxiosContextProps) => {
       searchText = searchText.split(" ").join("+");
       const response = await axios.get('https://maps.googleapis.com/maps/api/place/autocomplete/json',
         {
-          params: { input: searchText,  key: GOOGLE_API_KEY, },
+          params: { input: searchText,  key: GOOGLE_API_KEY,  },
         }
       );
   

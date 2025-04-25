@@ -63,6 +63,7 @@ export const FONTS = {
 };
 
 export const commonStyles = StyleSheet.create({
+  absolute: {position: 'absolute'},
   fillFullScreen: {flex: 1},
   rowDirection: {flexDirection: 'row'},
   rowDirectionCenter: {flexDirection: 'row', alignItems: 'center'},

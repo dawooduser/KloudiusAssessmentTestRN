@@ -1,10 +1,13 @@
 import { ActivityIndicator, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import React, { FC, memo, useCallback, useState } from 'react'
-import { COLORS, commonStyles } from '../../../constant'
-import { genericRatio } from '../../../helper'
+import React, { FC, memo, useCallback, useRef, useState } from 'react'
+import { COLORS, commonStyles, SIZES } from '../../../constant'
+import { genericRatio, screenNavigation } from '../../../helper'
 import { Entypo, Foundation } from '../../../constant/icons'
-import { AddressSearchInterface, Place } from '../../../types'
+import { AddressSearchInterface, Place, RootParamList } from '../../../types'
 import { useAxiosContext } from '../../../customHooks'
+import { useNavigation } from '@react-navigation/native'
+import { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import VerticalSpace from '../VerticalSpace'
 
 let timeout = null
 
@@ -14,6 +17,9 @@ const AddressSearch: FC<AddressSearchInterface> = ({onItemSelect}) => {
     const [suggestions, setSuggestions] = useState<Place[]>([]);
     const [showSearchLoaderVisible, setShowSearchLoaderVisible] = useState(false)
     const [editableBool, setEditableBool] = useState(false)
+    const navigation = useNavigation<RootParamList>();
+    const inputRef = useRef(null);
+
 
     const textInputOnChangeText = useCallback((val) => {
         if (val !== "" && query === val) return;
@@ -48,8 +54,11 @@ const AddressSearch: FC<AddressSearchInterface> = ({onItemSelect}) => {
         </View>
     ), [])
     const selectPlace = async (place: Place) => {
+        console.log("data", place.place_id)
         const data = await getDetailByPlaceId(place.place_id); 
+        console.log("data", data)
         const location = data.data?.result?.geometry?.location || null;
+        console.log("location", location)
         if (location) {
             setSuggestions([])
             const detailedPlace: Place = {
@@ -63,17 +72,30 @@ const AddressSearch: FC<AddressSearchInterface> = ({onItemSelect}) => {
         }
       };
       const removeSelectedAddress = () => {
+        if (inputRef.current) {
+            inputRef.current.clear();
+          }
         setEditableBool(false);
-        onItemSelect(null)
+        onItemSelect(null);
+
+      }
+      const gotoHistoryScreen = () => {
+        screenNavigation(navigation, "HistoryScreen")
       }
     return (
         <View style={[commonStyles.fullWidth, commonStyles.center, styles.container]}>
             <View style={[styles.addressContainer]}>
-                <View style={[commonStyles.fullWidth, styles.textIconBtnContaier, commonStyles.rowDirectionCenter]}>
-                    <View>
-                        <Foundation name={'address-book'} color={COLORS.primaryHard} size={genericRatio(20)} />
+            <TouchableOpacity style={[styles.gotoHistoryHandler, {}]} onPress={gotoHistoryScreen}>
+                        <Text style={[commonStyles.textColorWhite]}>{"Visit History"}</Text>
+                    </TouchableOpacity>
+                    <VerticalSpace />
+                <View style={[commonStyles.fullWidth, styles.textIconBtnContaier, commonStyles.rowDirectionCenter, {}]}>
+                    <View style={{paddingHorizontal: 5}}>
+                        <Foundation name={'address-book'} color={COLORS.primaryHard} size={genericRatio(30)} />
                     </View>
-                    <TextInput onChangeText={textInputOnChangeText} style={[commonStyles.fillFullScreen, styles.TextInputStyle]} placeholder='Please Search' />
+                    <TextInput 
+                    ref={inputRef}
+                    onChangeText={textInputOnChangeText} style={[commonStyles.fillFullScreen, styles.TextInputStyle]} placeholder='Please Search' />
                     {editableBool && <TouchableOpacity onPress={removeSelectedAddress}>
                         <Entypo name={'circle-with-cross'} color={COLORS.primary} size={genericRatio(20)} />
                     </TouchableOpacity>}
@@ -100,16 +122,18 @@ export default memo(AddressSearch)
 const styles = StyleSheet.create({
     container: {
         position: 'absolute',
-        top: 0
+        top: genericRatio(30),
     },
-    suggestionContainer: { width: '100%', maxHeight: 100, },
+    suggestionContainer: { width: '100%', maxHeight: SIZES.height * 0.25, },
     loaderSuggestionContainer: { backgroundColor: COLORS.white, paddingVertical: 15 },
     addressContainer: {
         width: '90%',
-        backgroundColor: COLORS.secondary
+        backgroundColor: COLORS.lightGray3,
+        paddingHorizontal: 10, borderRadius: 10,
+        paddingVertical: 10
     },
     textIconBtnContaier: {
-        height: genericRatio(30)
+        height: genericRatio(35)
     },
     TextInputStyle: {
         flex: 1,
@@ -126,5 +150,6 @@ const styles = StyleSheet.create({
     suggestionItem: { paddingVertical: 10, paddingHorizontal: 15 },
     searchText: { fontSize: 12, color: COLORS.black, fontWeight: '500' },
     addressScrolls: { flexGrow: 1, backgroundColor: COLORS.white },
+    gotoHistoryHandler: {backgroundColor: COLORS.primary, padding: 5, borderRadius: 5, alignSelf: 'flex-end'}
 
 })

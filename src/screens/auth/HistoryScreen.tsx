@@ -1,56 +1,89 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity, Alert } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { Place, RootParamList } from '../../types';
-import { useTypedSelector } from '../../customHooks';
-import { useDispatch } from 'react-redux';
-import { removeHistory } from '../../redux/reducers/searchHistory_Red';
-
-
+import React, { useCallback, useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  Alert,
+  StyleSheet,
+  Image,
+} from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { Place, RootParamList } from "../../types";
+import { useTypedSelector } from "../../customHooks";
+import { useDispatch } from "react-redux";
+import { removeHistory } from "../../redux/reducers/searchHistory_Red";
+import { COLORS, commonStyles, FONTS, SIZES } from "../../constant";
+import { AntDesign } from "../../constant/icons";
+import { genericRatio, width } from "../../helper";
+import { Header, HorizontalSpace, VerticalSpace } from "../../components";
+import LocationCardDetail from "../../components/view/LocationCardDetail";
+import { emptyListPlaceholder } from "../../constant/images";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function HistoryScreen() {
-  const [history, setHistory] = useState<Place[]>([]);
   const navigation = useNavigation<NativeStackNavigationProp<RootParamList>>();
-  const existingPlaces = useTypedSelector(x => x.saveHistory.Place)
-  const dispatch = useDispatch()
+  const existingPlaces = useTypedSelector((x) => x.saveHistory.Place);
 
-  useEffect(() => {
-    loadHistory();
-  }, []);
-
-  const loadHistory = async () => {
-    if (existingPlaces.length > 0) setHistory([...existingPlaces]);
+  const onBackhandler = () => {
+    navigation.goBack();
   };
 
-  const onSelect = (place: Place) => {
-    navigation.navigate('GoogleMapPlaceSearch', { place });
-  };
-
-  const confirmDelete = (placeId: string) => {
-    Alert.alert('Delete Item', 'Are you sure you want to remove this item from history?', [
-      { text: 'Cancel', style: 'cancel' },
-      { text: 'Delete', style: 'destructive', onPress: () => dispatch(removeHistory(placeId)) },
-    ]);
-  };
+  const PlaceHolderImage = useCallback(
+    () => (
+      <View style={[commonStyles.fillFullScreen, commonStyles.center]}>
+        <Image
+          source={emptyListPlaceholder}
+          style={style.emptyListPlaceholderStyle}
+        />
+      </View>
+    ),
+    []
+  );
 
   return (
-    <View style={{ flex: 1, padding: 10 }}>
-      <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10 }}>Search History</Text>
+    <SafeAreaView style={[commonStyles.fillFullScreen]}>
+      <View
+        style={[
+          style.headerCotnaienr,
+          commonStyles.fullWidth,
+          commonStyles.rowDirectionCenter,
+          commonStyles.spaceBetween,
+        ]}
+      >
+        <TouchableOpacity onPress={onBackhandler}>
+          <AntDesign
+            name="arrowleft"
+            size={genericRatio(25)}
+            color={COLORS.secondary}
+          />
+        </TouchableOpacity>
+
+        <Text style={[commonStyles.textColorWhite, FONTS.h3]}>History</Text>
+        <HorizontalSpace />
+      </View>
       <FlatList
-        data={history}
-        keyExtractor={(item) => item.place_id}
-        renderItem={({ item }) => (
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-            <TouchableOpacity style={{ flex: 1 }} onPress={() => onSelect(item)}>
-              <Text style={{ padding: 10 }}>{item.name || item.description}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => confirmDelete(item.place_id)}>
-              <Text style={{ padding: 10, color: 'red' }}>Delete</Text>
-            </TouchableOpacity>
-          </View>
+        data={existingPlaces}
+        keyExtractor={(index, item) => index.toString()}
+        ItemSeparatorComponent={() => <VerticalSpace grap={15} />}
+        ListEmptyComponent={<PlaceHolderImage />}
+        renderItem={({ index, item }) => (
+          <LocationCardDetail key={index} data={item} mapVisisblity customContainer={{width: '95%'}} />
         )}
       />
-    </View>
+    </SafeAreaView>
   );
 }
+
+const style = StyleSheet.create({
+  headerCotnaienr: {
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    backgroundColor: COLORS.primary,
+  },
+  emptyListPlaceholderStyle: {
+    height: genericRatio(200),
+    width: genericRatio(200),
+  },
+});

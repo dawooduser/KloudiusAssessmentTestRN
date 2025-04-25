@@ -3,8 +3,8 @@ import { ParamListBase } from "@react-navigation/native";
 import { AxiosResponse } from "axios";
 
 export interface RootParamList extends ParamListBase {
-  GoogleMapPlaceSearch: undefined;
-  HistoryScreen: undefined;
+  'GoogleMapPlaceSearch': undefined;
+  'HistoryScreen': undefined;
 }
 export interface Place {
   place_id: string;
@@ -24,6 +24,11 @@ export type AxiosInterceptorContextTypes = {
 
 export interface AddressSearchInterface {
   onItemSelect: (place: Place | null) => void
+}
+export interface LocationCardDetailInterface {
+  data: Place;
+  mapVisisblity: boolean;
+  customContainer?: {}
 }
 
 export type GooglePlaceDetailsResponse = {
