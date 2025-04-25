@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "techincalAssignmentRN",
-    "slug": "techincalAssignmentRN",
+    "slug": "kloudiusassessmenttestrn",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -25,6 +25,12 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": []
+    "plugins": [],
+    "extra": {
+      "eas": {
+        "projectId": "6f474ce9-3ee4-4981-95dd-42bd0a7a13d6"
+      }
+    },
+    "owner": "dawooduser"
   }
 }

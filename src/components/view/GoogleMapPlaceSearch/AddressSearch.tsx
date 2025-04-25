@@ -54,11 +54,8 @@ const AddressSearch: FC<AddressSearchInterface> = ({onItemSelect}) => {
         </View>
     ), [])
     const selectPlace = async (place: Place) => {
-        console.log("data", place.place_id)
         const data = await getDetailByPlaceId(place.place_id); 
-        console.log("data", data)
         const location = data.data?.result?.geometry?.location || null;
-        console.log("location", location)
         if (location) {
             setSuggestions([])
             const detailedPlace: Place = {

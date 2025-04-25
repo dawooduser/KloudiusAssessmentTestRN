@@ -111,6 +111,7 @@ const LocationCardDetail: FC<LocationCardDetailInterface> = ({
                 zoomControlEnabled={false}
                 scrollEnabled={false}
                 rotateEnabled={false}
+                loadingEnabled
                 region={{
                   latitude: data?.location?.lat || 3.139,
                   longitude: data?.location?.lng || 101.6869,

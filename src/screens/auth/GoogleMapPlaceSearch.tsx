@@ -60,6 +60,7 @@ export default function PlaceSearchScreen() {
         ref={mapViewRef}
         style={commonStyles.fillFullScreen}
         region={mapregion}
+        loadingEnabled
         onMapReady={onMapReadyHanlder}
       >
         {selectedPlace?.location && (
@@ -83,46 +84,3 @@ export default function PlaceSearchScreen() {
     </SafeAreaView>
   );
 }
-
-// <View style={[commonStyles.fillFullScreen]}>
-//       <TextInput
-//         placeholder="Search for a place"
-//         value={query}
-//         onChangeText={setQuery}
-//         style={{ padding: 10, borderBottomWidth: 1 }}
-//       />
-//       <TouchableOpacity onPress={() => navigation.navigate('HistoryScreen')}>
-//         <Text style={{ padding: 10, color: 'blue' }}>View History</Text>
-//       </TouchableOpacity>
-//       <FlatList
-//         data={suggestions}
-//         keyExtractor={(item) => item.place_id}
-//         renderItem={({ item }) => (
-//           <View>
-//             <TouchableOpacity onPress={() => selectPlace(item)}>
-//               <Text style={{ padding: 10 }}>{item.description}</Text>
-//             </TouchableOpacity>
-//           </View>
-//         )}
-//       />
-//       {selectedPlace?.location && (
-//         <MapView
-//           style={{ flex: 1 }}
-//           region={{
-//             latitude: selectedPlace.location.lat,
-//             longitude: selectedPlace.location.lng,
-//             latitudeDelta: 0.01,
-//             longitudeDelta: 0.01,
-//           }}
-//         >
-//           <Marker
-//             coordinate={{
-//               latitude: selectedPlace.location.lat,
-//               longitude: selectedPlace.location.lng,
-//             }}
-//             title={selectedPlace.name}
-//             description={selectedPlace.address}
-//           />
-//         </MapView>
-//       )}
-//     </View>
