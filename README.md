@@ -36,3 +36,9 @@ yarn
 
 ### 3. Run the App
 npx expo start --tunnel
+
+### 3. Build APK
+yarn run BuildAndroidAPK
+generate APK along with downloadable link for example 
+![image](https://github.com/user-attachments/assets/f64fe98d-d35d-46c2-bdd4-0cc621fc2bee)
+
